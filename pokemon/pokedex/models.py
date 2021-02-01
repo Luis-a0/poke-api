@@ -11,7 +11,7 @@ class Pokemon(models.Model):
 	defense_base = models.IntegerField()
 	defense_sp_base = models.IntegerField()
 	speed_base = models.IntegerField()
-	chain_evo_rel = models.ForeignKey('ChainEvol', db_column='chain_evol_rel', on_delete=models.PROTECT)
+	chain_evol_id = models.IntegerField()
 
 	class Meta:
 		managed = True
@@ -19,10 +19,3 @@ class Pokemon(models.Model):
 
 	def __str__(self):
 		return str(self.name)
-
-class ChainEvol(models.Model):
-	id_chain = models.IntegerField(primary_key=True)
-
-	class Meta:
-		managed = True
-		db_table = 'chain_evol'

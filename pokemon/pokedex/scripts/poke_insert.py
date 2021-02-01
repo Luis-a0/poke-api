@@ -1,5 +1,6 @@
 import json
 import requests
+from pokedex.models import Pokemon
 
 def url_conexion(id):
 	id = str(id)
@@ -35,18 +36,33 @@ def data_pokemon(id, chain_id):
 	response = requests.request("GET", url)
 	data_base = response.json()
 
-	data_export['name'] = data_base['name']
-	data_export['height'] = data_base['height']
-	data_export['weight'] = data_base['weight']
-	data_export['id'] = data_base['id']
-	data_export['chain_id'] = chain_id
+	poke_ball = Pokemon(id_pokemon = data_base['id'],
+		name = data_base['name'],
+		height = float(data_base['height']),
+		weight = float(data_base['weight']),
+		hp_base = int(data_base['stats'][0]['base_stat']),
+		attack_base = int(data_base['stats'][1]['base_stat']),
+		attack_sp_base = int(data_base['stats'][3]['base_stat']),
+		defense_base = int(data_base['stats'][2]['base_stat']),
+		defense_sp_base = int(data_base['stats'][4]['base_stat']),
+		speed_base = int(data_base['stats'][5]['base_stat']),
+		chain_evol_id = int(chain_id)
+	)
+	poke_ball.save()
 
-	data_export['base_stats']["hp"] = data_base['stats'][0]['base_stat']
-	data_export['base_stats']["attack"] = data_base['stats'][1]['base_stat']
-	data_export['base_stats']["attack_sp"] = data_base['stats'][3]['base_stat']
-	data_export['base_stats']["defense"] = data_base['stats'][2]['base_stat']
-	data_export['base_stats']["defense_sp"] = data_base['stats'][4]['base_stat']
-	data_export['base_stats']["speed"] = data_base['stats'][5]['base_stat']
 
-	return data_export
-
+def run(*args):
+	if(len(args) == 0):
+		print("Ingrese el ID del Pokemon a insertar.Ejemplo 'py manage.py runscript -v2 poke_insert --script-args 1'")
+	elif(len(args) > 1):
+		print("Ingrese un solo ID")
+	else:
+		id = args[0]
+		if(Pokemon.objects.filter(id_pokemon=int(id)).exists()):
+			print("La informacion del pokemon ya esta almacenada")
+		else:
+			conect = url_conexion(id)
+			data = data_chain(conect)
+			poke_lista = data['data']
+			for pokemon in poke_lista:
+				data_pokemon(pokemon, data['chain_id'])
