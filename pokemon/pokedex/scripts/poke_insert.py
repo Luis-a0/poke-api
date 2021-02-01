@@ -2,14 +2,9 @@ import json
 import requests
 from pokedex.models import Pokemon
 
-def url_conexion(id):
+def data_chain(id):
 	id = str(id)
-	url = "https://pokeapi.co/api/v2/pokemon-species/" + id
-	response = requests.request("GET", url)
-	species_data = response.json()
-	return species_data['evolution_chain']['url']
-
-def data_chain(url):
+	url = "https://pokeapi.co/api/v2/evolution-chain/" + id
 	response = requests.request("GET", url)
 	chain_data = response.json()
 
@@ -53,16 +48,15 @@ def data_pokemon(id, chain_id):
 
 def run(*args):
 	if(len(args) == 0):
-		print("Ingrese el ID del Pokemon a insertar.Ejemplo 'py manage.py runscript -v2 poke_insert --script-args 1'")
+		print("Ingrese el ID de la Cadenade de Evolución a insertar.Ejemplo 'py manage.py runscript -v2 poke_insert --script-args 1'")
 	elif(len(args) > 1):
 		print("Ingrese un solo ID")
 	else:
 		id = args[0]
-		if(Pokemon.objects.filter(id_pokemon=int(id)).exists()):
-			print("La informacion del pokemon ya esta almacenada")
+		if(Pokemon.objects.filter(chain_evol_id=int(id)).exists()):
+			print("La informacion de los pokemones asociados ya esta almacenada")
 		else:
-			conect = url_conexion(id)
-			data = data_chain(conect)
+			data = data_chain(id)
 			poke_lista = data['data']
 			for pokemon in poke_lista:
 				data_pokemon(pokemon, data['chain_id'])
