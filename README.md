@@ -18,7 +18,7 @@ Inserción de información
 ========================
 La información se obtiene de la API https://pokeapi.co/ y se almacena en la base de datos de la aplicación. El comando para la inserción es:  
     ```$ py manage.py runscript -v2 poke_insert --script-args NUMERO```  
-Siendo NUMERO el digito de identificación del pokémon.  
+Siendo NUMERO el digito de identificación de la cadena de evolución de los pokémones a almacenar.  
 
 Consumo del web service
 =======================
