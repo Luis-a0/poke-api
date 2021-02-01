@@ -2,6 +2,7 @@ import json
 import requests
 from pokedex.models import Pokemon
 
+# Función para la busqueda y almacenamiento de los nombres de los Pokémones  
 def data_chain(id):
 	id = str(id)
 	url = "https://pokeapi.co/api/v2/evolution-chain/" + id
@@ -19,13 +20,8 @@ def data_chain(id):
 		elemt.append(s_level['species']['name'])
 	return {'data': elemt, 'chain_id': chain_id}
 
+# Función para la busqueda y almacenamiento de la información del Pokémon.  
 def data_pokemon(id, chain_id):
-	ids = []
-	data_export = {'name':None, 'height': None, 'weight': None, 'id': None,
-                 'base_stats': {'hp':None, 'attack':None, 'defense':None,
-                                'attack_sp':None, 'defense_sp':None, 'speed': None},
-                 'chain_id':None
-                 }
 	url = "http://pokeapi.co/api/v2/pokemon/" + id
 
 	response = requests.request("GET", url)
@@ -45,7 +41,7 @@ def data_pokemon(id, chain_id):
 	)
 	poke_ball.save()
 
-
+# Función que ejecuta la consulta en base al ID de la cadena de evolución.
 def run(*args):
 	if(len(args) == 0):
 		print("Ingrese el ID de la Cadenade de Evolución a insertar.Ejemplo 'py manage.py runscript -v2 poke_insert --script-args 1'")
